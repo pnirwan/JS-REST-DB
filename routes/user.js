@@ -42,7 +42,7 @@ exports.get_call = function(req, res) {
                     });
                 }
             } else {
-                res.json({"message":"Check your database name"});
+                res.json({"message": "Check your database name"});
             }
 
 
@@ -54,19 +54,20 @@ exports.get_callbyid = function(req, res) {
     if (typeof (req.param("db_name")) !== 'undefined') {
         // if requested database exists we gonna "use" that database
         connection.query('USE ' + req.param("db_name"), function(err, rows) {
-            if(!err){
+            if (!err) {
                 if ((typeof (req.param("table_name")) !== 'undefined') && (typeof (req.param("id")) !== 'undefined')) {
-                // if table name exists we gonna execute 
-                connection.query('SELECT * FROM ' + req.param("table_name") + ' WHERE id = ' + req.param("id"), function(err, rows) {
-                    res.json({"data": rows});
-                });
-            }else{
-                res.json({"message":"Check your database name"});
+                    // if table name exists we gonna execute 
+                    connection.query('SELECT * FROM ' + req.param("table_name") + ' WHERE id = ' + req.param("id"), function(err, rows) {
+                        res.json({"data": rows});
+                    });
+                } else {
+                    res.json({"message": "Check your table name or id"});
+                }
+            } else {
+                res.json({"message": "Check your database name"});
             }
-                
-            }
-            
-            
+
+
         });
     }
 };
@@ -121,13 +122,13 @@ exports.insert_into = function(req, res) {
                 query += ')';
                 console.log(query);
                 connection.query(query, function(err, rows) {
-                    if(!err){
-                       res.json({'message': 'Row created successfully'}); 
-                    }else{
+                    if (!err) {
+                        res.json({'message': 'Row created successfully'});
+                    } else {
                         console.log(err);
-                        res.json({'message': 'Unknown column'}); 
+                        res.json({'message': 'Unknown column'});
                     }
-                    
+
                 });
             }
         });
@@ -188,35 +189,35 @@ exports.create_db = function(req, res) {
 exports.create_table = function(req, res) {
     if (typeof (req.param('db_name')) !== 'undefined') {
         connection.query('USE ' + req.param("db_name"), function(err, rows) {
-            if(!err){
-                 if ((typeof (req.param('table_name')) !== 'undefined') && (typeof (req.param('primary_key')) !== 'undefined') && (typeof (req.param('columns')) !== 'undefined')) {
-                var col = JSON.parse(req.body.columns);
-                var flag = false;
-                for (x in col) {
-                    if (x == req.param('primary_key')) {
-                        flag = true;
-                    }
-                }
-                if (!flag) {
-                    res.json({'message': 'Primary key not in column name'})
-                } else {
-                    var query = 'CREATE TABLE ' + req.param('table_name') + ' ( '
+            if (!err) {
+                if ((typeof (req.param('table_name')) !== 'undefined') && (typeof (req.param('primary_key')) !== 'undefined') && (typeof (req.param('columns')) !== 'undefined')) {
+                    var col = JSON.parse(req.body.columns);
+                    var flag = false;
                     for (x in col) {
-                        query += x + ' ' + col[x] + ' , ';
+                        if (x == req.param('primary_key')) {
+                            flag = true;
+                        }
                     }
-                    query += 'PRIMARY KEY(' + req.param('primary_key') + ') )';
-                    connection.query(query, function(err, rows) {
-                        res.json({'message': 'Table created successfully'});
-                    });
+                    if (!flag) {
+                        res.json({'message': 'Primary key not in column name'})
+                    } else {
+                        var query = 'CREATE TABLE ' + req.param('table_name') + ' ( '
+                        for (x in col) {
+                            query += x + ' ' + col[x] + ' , ';
+                        }
+                        query += 'PRIMARY KEY(' + req.param('primary_key') + ') )';
+                        connection.query(query, function(err, rows) {
+                            res.json({'message': 'Table created successfully'});
+                        });
+                    }
                 }
-            }
-                
-            }else{
-                res.json({"message":"Check your database name"});
+
+            } else {
+                res.json({"message": "Check your database name"});
             }
 
-           
-            
+
+
         });
     }
 };
