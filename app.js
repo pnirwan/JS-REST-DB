@@ -1,0 +1,43 @@
+
+/**
+ * Module dependencies.
+ */
+var routes = require('./config.js');
+var express = require('express');
+var routes = require('./routes');
+var user = require('./routes/user');
+var http = require('http');
+var path = require('path');
+
+var app = express();
+
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// development only
+if ('development' == app.get('env')) {
+    app.use(express.errorHandler());
+}
+app.get('/', routes.index);  // Route for home page
+app.get('/:db_name/:table_name/', user.get_call);// Route for users list and delete user
+app.get('/:db_name/:table_name/:id', user.get_callbyid);
+app.get('/:db_name/:table_name/:column_name/:value', user.get_callbyfield_name);
+app.post('/:db_name/:table_name', user.add_user);// Route to add user
+app.put('/:db_name/:table_name', user.update);// Route to update user
+app.delete('/:db_name/:table_name', user.delete);// Route to delete user
+
+app.post('/database', user.create_db);
+app.post('/:db_name/table', user.create_table);
+
+http.createServer(app).listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + app.get('port'));
+});

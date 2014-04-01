@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  #container
+    h2 List of names
+    - each user in users
+       form(method='get')
+          p
+            input(type='text', name='user_name', value=user.user_name)
+            button(type='submit', name='delete_name', value=user.id) Delete
+            button(type='submit', name='update_name', value=user.id) Update
+    form(method='post')  
+      h2 Add new Name
+      label name
+      input(type='text', name='user')
+      input(type='submit')
+      
+    
