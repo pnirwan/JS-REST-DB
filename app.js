@@ -28,16 +28,20 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 app.get('/', routes.index);  // Route for home page
-app.get('/:db_name/:table_name/', user.get_call);// Route for users list and delete user
+app.get('/:db_name/:table_name', user.get_call);// Route for users list and delete user
 app.get('/:db_name/:table_name/:id', user.get_callbyid);
 app.get('/:db_name/:table_name/:column_name/:value', user.get_callbylike);
 
+app.post('/:db_name/table', user.create_table);
 app.post('/:db_name/:table_name', user.insert_into);// Route to add user
 app.post('/database', user.create_db);
-app.post('/:db_name/table', user.create_table);
+
 
 app.put('/:db_name/:table_name/:id', user.update_byid);// Route to update user
+app.delete('/:db_name', user.delete_db);// Route to delete user
+app.delete('/:db_name/:table_name', user.delete_table);// Route to delete user
 app.delete('/:db_name/:table_name/:id', user.delete_byid);// Route to delete user
+
 http.createServer(app).listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
 });
