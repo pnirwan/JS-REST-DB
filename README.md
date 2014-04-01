@@ -54,7 +54,7 @@ We are following this convention as backbone also follows the same convention
 
 ###### Creating Database, Create tables with column:-
 
-POST /database/ (create db) payload  {'db_name':'value'}
-DELETE /:database/ (delete db)
-POST /:database/table payload {'table_name':'value', 'primary_key':'value', 'columns':{"column_name": "data_type"}} (create table)
-DELETE /:database/:table (delete table)
+- POST /database/ (create db) payload  {'db_name':'value'}
+- DELETE /:database/ (delete db)
+- POST /:database/table payload {'table_name':'value', 'primary_key':'value', 'columns':{"column_name": "data_type"}} (create table)
+- DELETE /:database/:table (delete table)
